@@ -1,0 +1,91 @@
+include emu8086.inc
+                           
+     MOV BX,768    ;0300
+     MOV ES,BX
+     MOV DI,0        ;0000
+     
+     
+     
+     MOV BH,6      ;N
+L1: 
+  
+        
+ print ' ' 
+     
+        
+call print_nl 
+
+    MOV BL,BH        ;K
+L2:                      
+
+
+  
+  MOV AL,BH
+  CALL factorial 
+  
+  MOV DH,AL  ;N!
+  
+  MOV AL,BL
+  CALL factorial 
+   
+  MOV DL,AL  ;K!
+  
+  MOV AL,BH
+  SUB AL,BL
+  CALL factorial
+   
+  
+  
+  MUL DL ; K! N-K!
+       MOV CL,AL
+       MOV AL,DH
+ DIV CL 
+  STOSB
+          print ' '
+      CALL PRINT_NUM 
+
+DEC BL 
+CMP BL,255
+JNZ L2
+DEC BH
+   CMP BH,255
+JNZ L1
+
+      
+
+         
+     HLT
+
+DEFINE_PRINT_NUM 
+DEFINE_PRINT_NUM_UNS
+
+
+factorial proc NEAR
+MOV CL,AL  
+MOV AX,1 
+CMP CL,0
+JE NOP
+AGN:
+MUL CL
+CMP CL,01
+LOOPNE AGN  
+NOP: 
+RET
+factorial ENDP
+     
+
+
+print_nl proc 
+    push ax  
+    push dx  
+    mov ah, 2
+    mov dl, 0Dh
+    int 21h  
+    mov dl, 0Ah
+    int 21h   
+    pop dx 
+    pop ax      
+    ret
+endp  
+
+;0300:0000
